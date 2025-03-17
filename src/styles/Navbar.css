@@ -1,0 +1,41 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #FE572E;
+  color: white;
+}
+
+.navbar h1 {
+  font-size: 24px;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  margin: 0 15px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.auth-links {
+  display: flex;
+  gap: 10px;
+}
+
+.signup {
+  background: black;
+  color: #FE572E;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
