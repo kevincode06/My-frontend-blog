@@ -8,18 +8,17 @@ const PostBlog = () => {
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState([]);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL; // Using the environment variable
+  const backendUrl = "https://my-backend-blog.onrender.com"; // Your Render backend URL
 
   // Fetch posts from backend when component loads
   useEffect(() => {
     fetch(`${backendUrl}/posts`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Fetched Posts:", data); // Debugging log
-        setPosts(Array.isArray(data) ? data : []); // Ensure it's an array
+        setPosts(Array.isArray(data) ? data : []);
       })
       .catch((error) => console.error("Error fetching posts:", error));
-  }, [backendUrl]);
+  }, []);
 
   // Function to add a new post
   const handlePost = async () => {
@@ -81,13 +80,32 @@ const PostBlog = () => {
     <div style={{ maxWidth: "600px", margin: "auto", textAlign: "center" }}>
       <h2>Create a Blog Post</h2>
 
-      <input type="text" placeholder="First Name" value={name} onChange={(e) => setName(e.target.value)} />
+      <input
+        type="text"
+        placeholder="First Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
-      <input type="text" placeholder="Surname" value={surname} onChange={(e) => setSurname(e.target.value)} />
+      <input
+        type="text"
+        placeholder="Surname"
+        value={surname}
+        onChange={(e) => setSurname(e.target.value)}
+      />
 
-      <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <input
+        type="text"
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
 
-      <textarea placeholder="Write your content here..." value={content} onChange={(e) => setContent(e.target.value)} />
+      <textarea
+        placeholder="Write your content here..."
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
 
       <button onClick={handlePost}>Post Blog</button>
 
