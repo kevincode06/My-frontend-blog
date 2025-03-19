@@ -19,7 +19,7 @@ const PostBlog = () => {
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);
-      });
+      }); 
   }, []);
 
   // Function to add a new post
