@@ -37,7 +37,6 @@ const PostBlog = () => {
         },
         body: JSON.stringify({ name, surname, title, content }),
       });
-
       if (response.ok) {
         const data = await response.json();
         setPosts((prevPosts) => [
