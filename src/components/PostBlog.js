@@ -36,9 +36,8 @@ const PostBlog = () => {
         body: JSON.stringify({ name, surname, title, content }),
       });
 
-      const data = await response.json();
       if (response.ok) {
-        // Update state with the new post added to the database
+        const data = await response.json(); // Ensure the response contains valid JSON
         setPosts((prevPosts) => [
           ...prevPosts,
           { id: data.postId, name, surname, title, content },
@@ -48,7 +47,8 @@ const PostBlog = () => {
         setTitle("");
         setContent("");
       } else {
-        alert(data.message || "Failed to add post");
+        const errorData = await response.json(); // Parse error response to get detailed message
+        alert(errorData.message || "Failed to add post");
       }
     } catch (error) {
       console.error("Error adding post:", error);
@@ -65,7 +65,6 @@ const PostBlog = () => {
       });
 
       if (response.ok) {
-        // Only remove the post from the state if deletion was successful
         setPosts(posts.filter((post) => post.id !== id));
       } else {
         alert("Error deleting post.");
@@ -116,7 +115,9 @@ const PostBlog = () => {
         posts.map((post) => (
           <div key={post.id}>
             <h4>{post.title}</h4>
-            <p><strong>By:</strong> {post.name} {post.surname}</p>
+            <p>
+              <strong>By:</strong> {post.name} {post.surname}
+            </p>
             <p>{post.content}</p>
             <button onClick={() => handleDelete(post.id)}>Delete</button>
           </div>
