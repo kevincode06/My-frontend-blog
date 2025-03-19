@@ -15,7 +15,7 @@ const PostBlog = () => {
     fetch(`${backendUrl}/posts`)
       .then((response) => response.json())
       .then((data) => {
-        setPosts(Array.isArray(data) ? data : []);
+        setPosts(Array.isArray(data) ? data : []); 
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);
