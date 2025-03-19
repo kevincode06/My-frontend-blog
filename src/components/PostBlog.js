@@ -17,7 +17,9 @@ const PostBlog = () => {
       .then((data) => {
         setPosts(Array.isArray(data) ? data : []);
       })
-      .catch((error) => console.error("Error fetching posts:", error));
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+      });
   }, []);
 
   // Function to add a new post
@@ -37,7 +39,7 @@ const PostBlog = () => {
       });
 
       if (response.ok) {
-        const data = await response.json(); // Ensure the response contains valid JSON
+        const data = await response.json();
         setPosts((prevPosts) => [
           ...prevPosts,
           { id: data.postId, name, surname, title, content },
@@ -47,11 +49,12 @@ const PostBlog = () => {
         setTitle("");
         setContent("");
       } else {
-        const errorData = await response.json(); // Parse error response to get detailed message
+        const errorData = await response.json();
         alert(errorData.message || "Failed to add post");
       }
     } catch (error) {
       console.error("Error adding post:", error);
+      alert("Error adding post. Please check your backend.");
     }
   };
 
