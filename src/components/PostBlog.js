@@ -8,9 +8,11 @@ const PostBlog = () => {
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState([]);
 
+  const backendUrl = "https://my-backend-blog.onrender.com"; // Render backend URL
+
   // Fetch posts from backend when component loads
   useEffect(() => {
-    fetch("http://localhost:5000/posts")
+    fetch(`${backendUrl}/posts`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched Posts:", data); // Debugging log
@@ -27,7 +29,7 @@ const PostBlog = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/posts", {
+      const response = await fetch(`${backendUrl}/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +61,7 @@ const PostBlog = () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/posts/${id}`, {
+      const response = await fetch(`${backendUrl}/posts/${id}`, {
         method: "DELETE",
       });
 
