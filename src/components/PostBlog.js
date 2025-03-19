@@ -8,7 +8,7 @@ const PostBlog = () => {
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState([]);
 
-  const backendUrl = "https://my-backend-blog.onrender.com"; // Render backend URL
+  const backendUrl = process.env.REACT_APP_BACKEND_URL; // Using the environment variable
 
   // Fetch posts from backend when component loads
   useEffect(() => {
@@ -19,7 +19,7 @@ const PostBlog = () => {
         setPosts(Array.isArray(data) ? data : []); // Ensure it's an array
       })
       .catch((error) => console.error("Error fetching posts:", error));
-  }, []);
+  }, [backendUrl]);
 
   // Function to add a new post
   const handlePost = async () => {
