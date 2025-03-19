@@ -15,11 +15,11 @@ const PostBlog = () => {
     fetch(`${backendUrl}/posts`)
       .then((response) => response.json())
       .then((data) => {
-        setPosts(Array.isArray(data) ? data : []); 
+        setPosts(Array.isArray(data) ? data : []);
       })
       .catch((error) => {
         console.error("Error fetching posts:", error);
-      }); 
+      });
   }, []);
 
   // Function to add a new post
@@ -37,6 +37,7 @@ const PostBlog = () => {
         },
         body: JSON.stringify({ name, surname, title, content }),
       });
+
       if (response.ok) {
         const data = await response.json();
         setPosts((prevPosts) => [
