@@ -12,7 +12,10 @@ const PostBlog = () => {
   useEffect(() => {
     fetch("http://localhost:5000/posts")
       .then((response) => response.json())
-      .then((data) => setPosts(data))
+      .then((data) => {
+        console.log("Fetched Posts:", data); // Debugging log
+        setPosts(Array.isArray(data) ? data : []); // Ensure it's an array
+      })
       .catch((error) => console.error("Error fetching posts:", error));
   }, []);
 
