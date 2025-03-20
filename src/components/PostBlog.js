@@ -7,20 +7,31 @@ const PostBlog = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const backendUrl = "https://my-backend-blog.onrender.com"; // Your Render backend URL
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://my-backend-blog.onrender.com";
 
   // Fetch posts from backend when component loads
   useEffect(() => {
+    setLoading(true);
     fetch(`${backendUrl}/posts`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         setPosts(Array.isArray(data) ? data : []);
-      }) 
+        setLoading(false);
+      })
       .catch((error) => {
         console.error("Error fetching posts:", error);
+        setError(`Failed to fetch posts: ${error.message}`);
+        setLoading(false);
       });
-  }, []);
+  }, [backendUrl]);
 
   // Function to add a new post
   const handlePost = async () => {
@@ -38,23 +49,23 @@ const PostBlog = () => {
         body: JSON.stringify({ name, surname, title, content }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setPosts((prevPosts) => [
-          ...prevPosts,
-          { id: data.postId, name, surname, title, content },
-        ]);
-        setName("");
-        setSurname("");
-        setTitle("");
-        setContent("");
-      } else {
+      if (!response.ok) {
         const errorData = await response.json();
-        alert(errorData.message || "Failed to add post");
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
       }
+
+      const data = await response.json();
+      setPosts((prevPosts) => [
+        ...prevPosts,
+        { id: data.postId, name, surname, title, content },
+      ]);
+      setName("");
+      setSurname("");
+      setTitle("");
+      setContent("");
     } catch (error) {
       console.error("Error adding post:", error);
-      alert("Error adding post. Please check your backend.");
+      alert(`Error adding post: ${error.message}`);
     }
   };
 
@@ -67,64 +78,77 @@ const PostBlog = () => {
         method: "DELETE",
       });
 
-      if (response.ok) {
-        setPosts(posts.filter((post) => post.id !== id));
-      } else {
-        alert("Error deleting post.");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
+      setPosts(posts.filter((post) => post.id !== id));
     } catch (error) {
       console.error("Error deleting post:", error);
-      alert("Error deleting post.");
+      alert(`Error deleting post: ${error.message}`);
     }
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "auto", textAlign: "center" }}>
+    <div className="post-blog-container">
       <h2>Create a Blog Post</h2>
 
-      <input
-        type="text"
-        placeholder="First Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <div className="form-container">
+        <input
+          type="text"
+          placeholder="First Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-      <input
-        type="text"
-        placeholder="Surname"
-        value={surname}
-        onChange={(e) => setSurname(e.target.value)}
-      />
+        <input
+          type="text"
+          placeholder="Surname"
+          value={surname}
+          onChange={(e) => setSurname(e.target.value)}
+        />
 
-      <input
-        type="text"
-        placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
-      <textarea
-        placeholder="Write your content here..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+        <textarea
+          placeholder="Write your content here..."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
 
-      <button onClick={handlePost}>Post Blog</button>
+        <button onClick={handlePost}>Post Blog</button>
+      </div>
 
       <h3>All Posts</h3>
-      {posts.length === 0 ? (
+      {loading ? (
+        <p>Loading posts...</p>
+      ) : error ? (
+        <p className="error-message">{error}</p>
+      ) : posts.length === 0 ? (
         <p>No posts yet</p>
       ) : (
-        posts.map((post) => (
-          <div key={post.id}>
-            <h4>{post.title}</h4>
-            <p>
-              <strong>By:</strong> {post.name} {post.surname}
-            </p>
-            <p>{post.content}</p>
-            <button onClick={() => handleDelete(post.id)}>Delete</button>
-          </div>
-        ))
+        <div className="posts-container">
+          {posts.map((post) => (
+            <div key={post.id} className="post-card">
+              <h4>{post.title}</h4>
+              <p className="author">
+                <strong>By:</strong> {post.name} {post.surname}
+              </p>
+              <p className="content">{post.content}</p>
+              <button 
+                onClick={() => handleDelete(post.id)}
+                className="delete-button"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
