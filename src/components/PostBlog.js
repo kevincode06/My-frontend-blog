@@ -16,7 +16,7 @@ const PostBlog = () => {
       .then((response) => response.json())
       .then((data) => {
         setPosts(Array.isArray(data) ? data : []);
-      }) 
+      })
       .catch((error) => {
         console.error("Error fetching posts:", error);
       });
