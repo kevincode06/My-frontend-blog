@@ -8,7 +8,7 @@ const PostBlog = () => {
   const [content, setContent] = useState("");
   const [posts, setPosts] = useState([]);
 
-  const backendUrl = "https://my-backend-blog.onrender.com"; // Your Render backend URL
+  const backendUrl = "https://my-backend-blog.onrender.com"; // backend
 
   // Fetch posts from backend when component loads
   useEffect(() => {
